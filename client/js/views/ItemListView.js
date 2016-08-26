@@ -1,4 +1,5 @@
 const Backbone = require('backbone');
+const ItemView = require('./ItemView');
 
 const ItemListView = Backbone.View.extend({
   el: '<ul></ul>',
@@ -9,7 +10,10 @@ const ItemListView = Backbone.View.extend({
 
   render() {
     this.users.forEach((item) => {
-      this.$el.append('<li>${item}</li>')
+      const itemView = new ItemView({ item: item});
+      this.$el.append(
+        itemView.render().el
+      );
     });
 
     return this;
