@@ -42,7 +42,7 @@ const ItemListView = Backbone.View.extend({
 
   render() {
     this.$el.find('ul').html('');
-    this.users.forEach((item) => {
+    this.items.forEach((item) => {
       const itemView = new ItemView({ item: item});
       this.$el.find('ul').append(
         itemView.render().el

@@ -11,7 +11,7 @@ const ItemView = Backbone.View.extend({
   `),
 
   initialize(options) {
-    this.item = optinos.item;
+    this.item = options.item;
   },
 
   render() {
