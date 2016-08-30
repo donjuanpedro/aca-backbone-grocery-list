@@ -6,15 +6,13 @@ window.$ = window.jQuery = $;
 
 const ItemListView = require('./views/ItemListView');
 
-const view = new ItemListView({ items: ['apples', 'bananas', 'pears', 'peaches'] });
+const view = new ItemListView({ items: [] });
 const app = document.querySelector('#app');
 
 const greeting = document.createElement('h2');
 greeting.innerText = 'Backbone Groceries';
 
-app.appendChild(greeting);
-
-app.append(view.render().el);
+app.appendChild(view.render().el);
 
 },{"./views/ItemListView":2,"jquery":6}],2:[function(require,module,exports){
 const Backbone = require('backbone');
