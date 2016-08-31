@@ -5,15 +5,43 @@ const $ = require('jquery');
 window.$ = window.jQuery = $;
 
 const ItemListView = require('./views/ItemListView');
+const ItemsCollection = require('./collections/ItemsCollection');
 
-const view = new ItemListView({ items: [] });
-const app = document.querySelector('#app');
+const items = new ItemsCollection();
+items.fetch({
+  success() {
+    const view = new ItemListView({ collection: items });
+    const app = document.querySelector('#app');
 
-app.appendChild(view.render().el);
+    app.append(view.render().el);
+  }
+});
 
-},{"./views/ItemListView":2,"jquery":6}],2:[function(require,module,exports){
+},{"./collections/ItemsCollection":2,"./views/ItemListView":4,"jquery":8}],2:[function(require,module,exports){
+const Backbone = require('backbone');
+const ItemModel = require('../models/ItemModel');
+
+const ItemsCollection = Backbone.Collection.extend({
+  url: '/items',
+  model: ItemModel
+});
+
+module.exports = ItemsCollection;
+
+},{"../models/ItemModel":3,"backbone":6}],3:[function(require,module,exports){
+const Backbone = require('backbone');
+
+const ItemModel = Backbone.Model.extend({
+  idAttribute: '_id',
+  urlRoot: '/items'
+});
+
+module.exports = ItemModel;
+
+},{"backbone":6}],4:[function(require,module,exports){
 const Backbone = require('backbone');
 const ItemView = require('./ItemView');
+const ItemModel = require('../models/ItemModel');
 
 const ItemListView = Backbone.View.extend({
   el: `
@@ -33,41 +61,43 @@ const ItemListView = Backbone.View.extend({
     </div>
   `,
 
-  initialize(options) {
-    this.items = options.items;
-  },
-
   events: {
     'submit form': 'handleFormSubmit'
   },
 
   handleFormSubmit(e) {
     const form = $(e.target);
-    const item = {
+    const item = new ItemModel({
       name: form.find('input[name="name"]').val(),
       quantity: form.find('input[name="quantity"]').val()
-    };
+    });
 
-    this.items.push(item);
-    form.find('input[type="text"]').val('');
-    this.render();
+    item.save(null, {
+      success: () => {
+        //Add the new item
+        this.collection.add(item);
+        //Empty form inputs
+        form.find('input[type="text"]').val('');
+        //re-render the list
+        this.render();
+      }
+    });
+    //Prevent the form's default action
     e.preventDefault();
   },
 
   render() {
     this.$el.find('ul').html('');
-    this.items.forEach(item => {
-      const itemView = new ItemView({ item: item });
+    this.collection.forEach(item => {
+      const itemView = new ItemView({ model: item });
       this.$el.find('ul').append(itemView.render().el);
     });
-
-    return this;
   }
 });
 
 module.exports = ItemListView;
 
-},{"./ItemView":3,"backbone":4}],3:[function(require,module,exports){
+},{"../models/ItemModel":3,"./ItemView":5,"backbone":6}],5:[function(require,module,exports){
 const _ = require('lodash');
 const Backbone = require('backbone');
 
@@ -76,23 +106,19 @@ const ItemView = Backbone.View.extend({
   el: '<li></li>',
 
   template: _.template(`
-    <div>Name: <%= item.name %></div>
-    <div>Quantity: <%= item.quantity %></div>
+    <div>Name: <%= item.get("name") %></div>
+    <div>Quantity: <%= item.get("quantity") %></div>
   `),
 
-  initialize(options) {
-    this.item = options.item;
-  },
-
   render() {
-    this.$el.append(this.template({ item: this.item }));
+    this.$el.append(this.template({ item: this.model }));
     return this;
   }
 });
 
 module.exports = ItemView;
 
-},{"backbone":4,"lodash":7}],4:[function(require,module,exports){
+},{"backbone":6,"lodash":9}],6:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.3.3
 
@@ -2017,7 +2043,7 @@ module.exports = ItemView;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"jquery":6,"underscore":5}],5:[function(require,module,exports){
+},{"jquery":8,"underscore":7}],7:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -3567,7 +3593,7 @@ module.exports = ItemView;
   }
 }.call(this));
 
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /*eslint-disable no-unused-vars*/
 /*!
  * jQuery JavaScript Library v3.1.0
@@ -13643,7 +13669,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],7:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 (function (global){
 /**
  * @license

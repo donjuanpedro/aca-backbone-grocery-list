@@ -11,6 +11,7 @@ const items = require('./routes/items');
 // Set up mongoose
 const mongoose = require('mongoose');
 // You need to connect to your MongoDB here
+mongoose.connect('mongodb://localhost/aca-backbone-grocery-list');
 
 const app = express();
 
