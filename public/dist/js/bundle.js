@@ -13,7 +13,7 @@ items.fetch({
     const view = new ItemListView({ collection: items });
     const app = document.querySelector('#app');
 
-    app.append(view.render().el);
+    app.appendChild(view.render().el);
   }
 });
 
@@ -46,7 +46,7 @@ const ItemModel = require('../models/ItemModel');
 const ItemListView = Backbone.View.extend({
   el: `
     <div>
-      <form>
+      <form action="/items" method="POST">
         <div>
           <label for="name">Name:</label>
           <input type="text" name="name" />
@@ -92,6 +92,7 @@ const ItemListView = Backbone.View.extend({
       const itemView = new ItemView({ model: item });
       this.$el.find('ul').append(itemView.render().el);
     });
+    return this;
   }
 });
 

@@ -1,25 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const ItemModel = require('..models/ItemModel.js');
-const ItemController = require('../controllers/ItemsController.js');
+const ItemModel = require('../models/ItemModel.js');
+const ItemsController = require('../controllers/ItemsController.js');
 
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
 
-router.get('/', PostsController.list);
+router.get('/', ItemsController.list);
 
-router.get('/:id', PostsController.show);
+router.get('/:id', ItemsController.show);
 
-router.get('/:id/edit', PostsController.edit);
+router.get('/:id/edit', ItemsController.edit);
 
-router.post('/', PostsController.create);
+router.post('/', ItemsController.create);
 
-router.put('/:id', PostsController.update);
+router.put('/:id', ItemsController.update);
 
-router.delete('/:id', PostsController.remove);
+router.delete('/:id', ItemsController.remove);
 
 module.exports = router;

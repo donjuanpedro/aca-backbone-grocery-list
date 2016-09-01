@@ -1,23 +1,23 @@
-const ItemModel = require('.models/ItemModel.js');
+const ItemModel = require('../models/ItemModel.js');
 
 module.exports = {
   list: function(req, res) {
-    ItemModel.find(function (err, posts) {
-      res.render('items', { items });
+    ItemModel.find(function (err, items) {
+      res.json(200, items);
     });
   },
 
   show: function (req, res) {
     var id = req.params.id;
-    ItemModel.findOne({_id: id}, function (err, post) {
+    ItemModel.findOne({_id: id}, function (err, item) {
       return res.render('item_view', {item: item});
     });
   },
 
   edit: function (req, res) {
     var id = req.params.id;
-    ItemModel.findOne({_id: id}, function (err, post) {
-      return res.render('item_edit', {post: post});
+    ItemModel.findOne({_id: id}, function (err, item) {
+      return res.render('item_edit', {item: item});
     });
   },
 
@@ -27,17 +27,17 @@ module.exports = {
       quantity: req.body.quantity
     });
     item.save((err, item) => {
-      res.redirect('/');
+      res.redirect('/items');
     });
   },
 
   update: function(req, res) {
     var id = req.params.id;
-    ItemModel.findOne({_id: id}, function (err, post) {
+    ItemModel.findOne({_id: id}, function (err, item) {
       item.name = req.body.name;
       item.quantity = req.body.quantity;
 
-      item.save(function (err, post) {
+      item.save(function (err, item) {
         res.redirect('/items');
       });
     });
@@ -46,9 +46,9 @@ module.exports = {
   remove: function(req, res) {
     var id = req.params.id;
     ItemModel.findByIdAndRemove({_id: id}, function (err, item) {
-      remove.item;
+      items.remove(item);
     });
-    items.save(function(err, posts) {
+    items.save(function(err, items) {
       res.redirect('/items');
     });
   },

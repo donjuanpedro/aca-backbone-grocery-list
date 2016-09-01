@@ -1,9 +1,11 @@
+const http = require('http');
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+
 
 const routes = require('./routes/index');
 const items = require('./routes/items');
@@ -29,6 +31,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/items', items);
+
+app.get('/', (req, res, next) => {
+  res.redirect('/items');
+});
+
+const server = http.createServer(app);
+const port = 3001;
+
+server.listen(port, () => {
+  console.log(`Listening on port ${port}`);
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -60,6 +73,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;

@@ -5,7 +5,7 @@ const ItemModel = require('../models/ItemModel');
 const ItemListView = Backbone.View.extend({
   el: `
     <div>
-      <form>
+      <form action="/items" method="POST">
         <div>
           <label for="name">Name:</label>
           <input type="text" name="name" />
@@ -53,6 +53,7 @@ const ItemListView = Backbone.View.extend({
         itemView.render().el
       );
     });
+    return this;
   }
 });
 

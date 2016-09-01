@@ -12,6 +12,6 @@ items.fetch({
     const view = new ItemListView({ collection: items});
     const app = document.querySelector('#app');
 
-    app.append(view.render().el);
+    app.appendChild(view.render().el);
   }
 });
