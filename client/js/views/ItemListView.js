@@ -9,12 +9,10 @@ const ItemListView = Backbone.View.extend({
         <div>
           <label for="name">Name:</label>
           <input type="text" name="name" />
-        </div>
-        <div>
           <label for="quantity">Quantity</label>
           <input type="text" name="quantity" />
+          <input type="submit" value="+ New Item" />
         </div>
-        <input type="submit" value="+ New Item" />
       </form>
       <ul></ul>
     </div>
