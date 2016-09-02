@@ -3,15 +3,43 @@ const Backbone = require('backbone');
 
 const ItemView = Backbone.View.extend({
 
-  el: '<li></li>',
+  el: `<li class="item-info"></li>`,
+
+  initialize() {
+    this.listenTo(this.model, 'sync', this.render);
+  },
 
   template: _.template(`
-    <div>Name: <%= item.get("name") %></div>
-    <div>Quantity: <%= item.get("quantity") %></div>
+    <div>
+      <label>Name: </label>
+      <%= item.get("name") %>
+    </div>
+    <div>
+      <label>Quantity:</label>
+      <%= item.get("quantity") %>
+    </div>
+    <div>
+      <label>Activated:</label>
+      <input type="checkbox" <%= item.get('activated') ? 'checked' : '' %> />
+    </div>
   `),
 
+  events: {
+    'click input[type="checkbox"]': 'handleCheckboxClick'
+  },
+
+  handleCheckboxClick(e) {
+    this.model.save({ activated: e.target.checked});
+  },
+
   render() {
-    this.$el.append(this.template({item: this.model}));
+    if (this.model.get('activated')) {
+      this.$el.addClass('activated');
+    } else {
+      this.$el.removeClass('activated');
+    }
+
+    this.$el.html(this.template({item: this.model}));
     return this;
   }
 });

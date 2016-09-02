@@ -27,7 +27,7 @@ module.exports = {
       quantity: req.body.quantity
     });
     item.save((err, item) => {
-      res.redirect('/items');
+      res.json(item);
     });
   },
 
@@ -36,9 +36,10 @@ module.exports = {
     ItemModel.findOne({_id: id}, function (err, item) {
       item.name = req.body.name;
       item.quantity = req.body.quantity;
+      item.activated = req.body.activated;
 
       item.save(function (err, item) {
-        res.redirect('/items');
+        res.json(item);
       });
     });
   },

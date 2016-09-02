@@ -8,14 +8,11 @@ const ItemListView = require('./views/ItemListView');
 const ItemsCollection = require('./collections/ItemsCollection');
 
 const items = new ItemsCollection();
-items.fetch({
-  success() {
-    const view = new ItemListView({ collection: items });
-    const app = document.querySelector('#app');
+items.fetch();
+const view = new ItemListView({ collection: items });
+const app = document.querySelector('#app');
 
-    app.appendChild(view.render().el);
-  }
-});
+app.appendChild(view.render().el);
 
 },{"./collections/ItemsCollection":2,"./views/ItemListView":4,"jquery":8}],2:[function(require,module,exports){
 const Backbone = require('backbone');
@@ -58,6 +55,10 @@ const ItemListView = Backbone.View.extend({
       <ul></ul>
     </div>
   `,
+
+  initialize() {
+    this.listenTo(this.collection, 'update', this.render);
+  },
 
   events: {
     'submit form': 'handleFormSubmit'
@@ -102,15 +103,43 @@ const Backbone = require('backbone');
 
 const ItemView = Backbone.View.extend({
 
-  el: '<li></li>',
+  el: `<li class="item-info"></li>`,
+
+  initialize() {
+    this.listenTo(this.model, 'sync', this.render);
+  },
 
   template: _.template(`
-    <div>Name: <%= item.get("name") %></div>
-    <div>Quantity: <%= item.get("quantity") %></div>
+    <div>
+      <label>Name: </label>
+      <%= item.get("name") %>
+    </div>
+    <div>
+      <label>Quantity:</label>
+      <%= item.get("quantity") %>
+    </div>
+    <div>
+      <label>Activated:</label>
+      <input type="checkbox" <%= item.get('activated') ? 'checked' : '' %> />
+    </div>
   `),
 
+  events: {
+    'click input[type="checkbox"]': 'handleCheckboxClick'
+  },
+
+  handleCheckboxClick(e) {
+    this.model.save({ activated: e.target.checked });
+  },
+
   render() {
-    this.$el.append(this.template({ item: this.model }));
+    if (this.model.get('activated')) {
+      this.$el.addClass('activated');
+    } else {
+      this.$el.removeClass('activated');
+    }
+
+    this.$el.html(this.template({ item: this.model }));
     return this;
   }
 });
